@@ -3,6 +3,8 @@
 
 #include <stddef.h>
 
-void grayscale(unsigned char* data, int width, int height, int channels);
+#include "image.h"
+
+void grayscale(Image* img);
 
 #endif

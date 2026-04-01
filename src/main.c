@@ -1,14 +1,10 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 
+#include "image.h"
 #include "filter.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -32,15 +28,14 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    int width, height, channels;
-    unsigned char* data = stbi_load(infile, &width, &height, &channels, 0);
-    if (!data) {
+    Image img = load_image(infile);
+    if (!img.data) {
         return 1;
     }
 
     if (filter) {
         if (strcmp(filter, "grayscale") == 0)
-            grayscale(data, width, height, channels);
+            grayscale(&img);
     }
 
     if (!outfile) {
@@ -50,15 +45,15 @@ int main(int argc, char* argv[]) {
             char ch = getchar();
             if (ch != 'y' && ch != 'Y') {
                 printf("Aborted.\n");
-                stbi_image_free(data);
+                free_image(&img);
                 return 0;
             }
         }
     }
 
-    stbi_write_jpg(outfile, width, height, channels, data, 100);
+    write_image(outfile, &img);
 
-    stbi_image_free(data);
+    free_image(&img);
 
     return 0;
 

@@ -6,9 +6,9 @@ enum RGBColor {
     BLUE = 2
 };
 
-void grayscale(unsigned char* data, int width, int height, int channels) {
-    size_t size = width * height * channels;
-    for (unsigned char* pixel = data; pixel < (size + data); pixel += channels) {
+void grayscale(Image* img) {
+    size_t size = img->width * img->height * img->channels;
+    for (unsigned char* pixel = img->data; pixel < (size + img->data); pixel += img->channels) {
         unsigned char gray = (pixel[RED] + pixel[GREEN] + pixel[BLUE]) / 3;
         pixel[RED] = pixel[GREEN] = pixel[BLUE] = gray;
     }
