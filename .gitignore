@@ -3,3 +3,7 @@ obj/*
 images/
 .vscode/
 .idea/
+
+*.jpg
+*.jpeg
+*.png
