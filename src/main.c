@@ -36,6 +36,8 @@ int main(int argc, char* argv[]) {
     if (filter) {
         if (strcmp(filter, "grayscale") == 0)
             grayscale(&img);
+        else if (strcmp(filter, "sepia") == 0)
+            sepia(&img);
     }
 
     if (!outfile) {
