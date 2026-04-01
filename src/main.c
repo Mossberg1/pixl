@@ -34,10 +34,14 @@ int main(int argc, char* argv[]) {
     }
 
     if (filter) {
-        if (strcmp(filter, "grayscale") == 0)
-            grayscale(&img);
-        else if (strcmp(filter, "sepia") == 0)
-            sepia(&img);
+        Filter* f = get_filter(filter);
+        if (!f) {
+            fprintf(stderr, "Unknown filter: %s\n", filter);
+            free_image(&img);
+            return 1;
+        }
+
+        f->apply(&img);
     }
 
     if (!outfile) {

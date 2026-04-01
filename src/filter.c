@@ -1,10 +1,26 @@
+#include <string.h>
+
 #include "filter.h"
 
-enum RGBColor {
-    RED = 0,
-    GREEN = 1,
-    BLUE = 2
+void grayscale(Image* img);
+void sepia(Image* img);
+static unsigned char clamp(int value);
+
+static const Filter filters[] = {
+    { "grayscale", grayscale },
+    { "sepia", sepia },
+    { NULL, NULL }
 };
+
+Filter* get_filter(const char* name) {
+    for (int i = 0; filters[i].name != NULL; i++) {
+        if (strcmp(name, filters[i].name) == 0) {
+            return (Filter*)&filters[i];
+        }
+    }
+
+    return NULL;
+}
 
 void grayscale(Image* img) {
     size_t size = img->width * img->height * img->channels;
@@ -21,8 +37,12 @@ void sepia(Image* img) {
         int green = (pixel[RED] * .349) + (pixel[GREEN] * .686) + (pixel[BLUE] * .168);
         int blue  = (pixel[RED] * .272) + (pixel[GREEN] * .534) + (pixel[BLUE] * .131);
 
-        pixel[RED]   = red > 255 ? 255 : red;
-        pixel[GREEN] = green > 255 ? 255: green;
-        pixel[BLUE]  = blue > 255 ? 255: blue;
+        pixel[RED]   = clamp(red);
+        pixel[GREEN] = clamp(green);
+        pixel[BLUE]  = clamp(blue);
     }
+}
+
+static unsigned char clamp(int value) {
+    return value > 255 ? 255 : (value < 0 ? 0 : value);
 }
